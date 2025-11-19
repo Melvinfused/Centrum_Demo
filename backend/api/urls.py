@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .views import SignUpView, SignInView, DashboardView
+from .views import SignUpView, SignInView, DashboardView, PasswordResetRequestView
 
 # Simple API check view
 class APICheckView(APIView):
@@ -15,4 +15,4 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api-check/', APICheckView.as_view(), name='api_check'),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
-]
+    path('password-reset/request/', PasswordResetRequestView.as_view(), name='password_reset_request'),]

@@ -107,7 +107,8 @@ export default function Signin() {
       </form>
 
       <p>
-        Don't have an account? <Link to="/">Sign Up</Link>
+        Don't have an account? <Link to="/">Sign Up</Link> <br />
+        Forgot your password? <Link to="/forgot-password">Reset it</Link>
       </p>
     </div>
   );

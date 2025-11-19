@@ -123,7 +123,7 @@ export default function Signup() {
         <button type="submit">Signup</button>
       </form>
       <p>
-        Already have an account? <Link to="/signin">Sign in</Link>
+        Already have an account? <Link to="/signin">Sign in</Link> <br />
       </p>
 
       {error && <p style={{ color: "red" }}>{error}</p>}

@@ -5,6 +5,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
 from .serializers import SignUpSerializer, SignInSerializer
+from django.utils import timezone
+from django.core.mail import send_mail
+from datetime import timedelta
+import random
+from .models import CustomUser, PasswordResetOTP
+from django.conf import settings
 
 # --- Signup view ---
 class SignUpView(APIView):
@@ -46,3 +52,33 @@ class DashboardView(APIView):
         }
 
         return Response(data)
+
+class PasswordResetRequestView(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response({"error": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = CustomUser.objects.get(email=email)
+
+            # --- Generate OTP ---
+            otp = str(random.randint(100000, 999999))  # 6-digit OTP
+            expiry_time = timezone.now() + timedelta(minutes=15)
+
+            # Save OTP to database
+            PasswordResetOTP.objects.create(user=user, otp=otp, expires_at=expiry_time)
+
+            # --- Send email ---
+            subject = "Your Password Reset OTP"
+            message = f"Hello {user.fullname or user.email},\n\nYour OTP for password reset is: {otp}\nIt will expire in 15 minutes.\n\nIf you did not request this, please ignore this email."
+            from_email = settings.DEFAULT_FROM_EMAIL
+            recipient_list = [user.email]
+
+            send_mail(subject, message, from_email, recipient_list)
+
+            return Response({"message": "Password reset OTP sent to your email."}, status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "Email not registered."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": f"Failed to send email. {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
