@@ -12,3 +12,11 @@ class AttendanceRecordSerializer(serializers.ModelSerializer):
         model = attendanceRecord
         fields = '__all__'
         read_only_fields = ('user', 'companyProfile', 'created_at', 'check_in_time', 'check_out_time', 'photo')
+
+class AttendanceHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = attendanceRecord
+        fields = ('check_in_time', 'check_out_time')
+    
+    def get_user_name(self, obj):
+        return obj.user.full_name if obj.user else None

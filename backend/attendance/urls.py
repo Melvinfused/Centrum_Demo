@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf.urls.static import static
 from django.conf import settings
-from .views import AttendanceCheckInView, AttendanceCheckOutView
+from .views import AttendanceCheckInView, AttendanceCheckOutView, AttendanceHistoryView
 # from .views import 
 
 # Simple API check view
@@ -14,5 +14,6 @@ class APICheckView(APIView):
 urlpatterns = [
     path('checkin/', AttendanceCheckInView.as_view(), name='checkin'),
     path('checkout/', AttendanceCheckOutView.as_view(), name='checkin'),
+    path('history/', AttendanceHistoryView.as_view(), name='history'),
     path('api-check/', APICheckView.as_view(), name='api_check'),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

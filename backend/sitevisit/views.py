@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from .models import sitevisitRecord, siteProfile
-from .serializers import SiteVisitRecordSerializer
+from .serializers import SiteVisitRecordSerializer, SiteVisitHistorySerializer
 import math
 
 # Haversine formula
@@ -137,3 +137,10 @@ class SiteVisitCheckOutView(generics.CreateAPIView):
 
         return Response({"success": "Checked out successfully!"}, status=status.HTTP_200_OK)
 
+class SiteVisitHistoryView(generics.ListAPIView):
+    serializer_class = SiteVisitHistorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Return only records for the logged-in user
+        return sitevisitRecord.objects.filter(user=self.request.user).order_by('-check_in_time')
