@@ -87,9 +87,11 @@ class AttendanceCheckInView(generics.CreateAPIView):
                 }
             }, status=status.HTTP_400_BAD_REQUEST)
 
+        if not request.FILES.get("photo"):
+            return Response({"error": "Photo is required for check-in."}, status=status.HTTP_400_BAD_REQUEST)
         # Auto-fill address from user's company
         address_to_save = user_company.company_address
-
+        
         # Create attendance record (serializer should have companyProfile/user/check_in_time as read_only)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -99,7 +101,8 @@ class AttendanceCheckInView(generics.CreateAPIView):
             check_in_time=timezone.now(),
             address=address_to_save,
             latitude=input_lat,
-            longitude=input_lon
+            longitude=input_lon,
+            photo=request.FILES.get("photo")
         )
 
         return Response({"success": f"Checked in successfully at {user_company.company_name}!"}, status=status.HTTP_201_CREATED)

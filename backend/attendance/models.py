@@ -22,4 +22,4 @@ class attendanceRecord(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.email} - {self.date}"
+        return f"{self.user.email} - {self.companyProfile.company_name} - {self.check_in_time.date()}"

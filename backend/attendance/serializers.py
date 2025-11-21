@@ -11,4 +11,4 @@ class AttendanceRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = attendanceRecord
         fields = '__all__'
-        read_only_fields = ('user', 'companyProfile', 'created_at', 'check_in_time', 'check_out_time')
+        read_only_fields = ('user', 'companyProfile', 'created_at', 'check_in_time', 'check_out_time', 'photo')

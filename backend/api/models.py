@@ -38,6 +38,12 @@ class CustomUser(AbstractUser):
         null=True,
         blank=True
     )
+    site = models.ForeignKey(
+        'sitevisit.siteProfile',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []  # No username required
